@@ -20,7 +20,7 @@ exports.up = function (knex) {
             // Foreign Key
             table
                 .integer("id_empleado")
-                .reference("id")
+                .references("id")
                 .inTable("empleado")
                 .notNullable();
 
@@ -35,12 +35,12 @@ exports.up = function (knex) {
             // Foreign Key
             table
                 .integer("id_empleado")
-                .reference("id")
+                .references("id")
                 .inTable("empleado")
                 .notNullable();
 
-            table.string("registro_entrada").notNullable();
-            table.string("registro_salida").notNullable();
+            table.datetime("registro_entrada").notNullable();
+            table.datetime("registro_salida").notNullable();
             table.timestamps(true, true);
         })
         .createTable("semana", (table) => {
@@ -50,7 +50,7 @@ exports.up = function (knex) {
             //Foreign Keys
             table
                 .integer("id_empleado")
-                .reference("id")
+                .references("id")
                 .inTable("empleado")
                 .notNullable();
 
