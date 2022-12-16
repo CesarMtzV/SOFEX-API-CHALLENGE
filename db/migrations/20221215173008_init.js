@@ -7,25 +7,20 @@ exports.up = function (knex) {
     return knex.schema
         .createTable("empleado", (table) => {
             // Primary Key
-            table.increments();
+            table.string("id").notNullable();
+            table.primary(["id"]);
 
             table.string("nombre").notNullable();
-            table.string("appellido").notNullable();
+            table.string("apellido").notNullable();
+            table.decimal("salario_semanal").notNullable();
+            table.integer("registro_actual");
             table.timestamps(true, true);
         })
         .createTable("cargo", (table) => {
             // Primary Key
             table.increments();
 
-            // Foreign Key
-            table
-                .integer("id_empleado")
-                .references("id")
-                .inTable("empleado")
-                .notNullable();
-
             table.string("nombre_cargo").notNullable();
-            table.decimal("salario_semanal").notNullable();
             table.timestamps(true, true);
         })
         .createTable("registros", (table) => {
@@ -34,28 +29,29 @@ exports.up = function (knex) {
 
             // Foreign Key
             table
-                .integer("id_empleado")
+                .string("id_empleado")
                 .references("id")
                 .inTable("empleado")
                 .notNullable();
-
+            table.string("id_semana");
             table.datetime("registro_entrada").notNullable();
-            table.datetime("registro_salida").notNullable();
+            table.datetime("registro_salida");
             table.timestamps(true, true);
         })
         .createTable("semana", (table) => {
             // Primary Key
             table.increments();
 
-            //Foreign Keys
+            //Foreign Key
             table
-                .integer("id_empleado")
+                .string("id_empleado")
                 .references("id")
                 .inTable("empleado")
                 .notNullable();
 
             table.date("fecha_inicio").notNullable();
             table.decimal("pago_final_semana").notNullable();
+            table.decimal("horas_trabajadas");
             table.timestamps(true, true);
         });
 };
