@@ -18,13 +18,14 @@ const HORAS_SEMANALES = 45;
 app.use("/empleado/generar-informe-de-pagos", async (req, res) => {
     try {
         const { id_empleado, fecha_inicio } = req.body;
+        const semana = await Semana.query()
+            .select("horas_trabajadas", "pago_final_semana", "id_empleado")
+            .where("fecha_inicio", "=", fecha_inicio);
 
         // Obtener la información de todos los empleados
         if (id_empleado === null) {
             const empleados = await Empleado.query();
-            const semana = await Semana.query()
-                .select("horas_trabajadas", "pago_final_semana", "id_empleado")
-                .where("fecha_inicio", "=", fecha_inicio);
+
             var data = [];
 
             empleados.forEach((empleado) => {
@@ -47,6 +48,12 @@ app.use("/empleado/generar-informe-de-pagos", async (req, res) => {
                 cantidad_a_pagar: 0.0,
             };
             const empleado = await Empleado.query().findById(id_empleado);
+            semana.forEach((item) => {
+                if (item.id_empleado === id_empleado) {
+                    data.tiempo_trabajado = item.horas_trabajadas;
+                    data.cantidad_a_pagar = item.pago_final_semana;
+                }
+            });
 
             res.json(data);
         }
